@@ -1,5 +1,5 @@
 numpy
-tensorflow==2.6.0
+tensorflow
 torch>=1.2.0+cpu
 torchvision>=0.5.0+cpu
 timm
