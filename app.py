@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request             #import
-import glob
 from models import EfficientNet
 import PIL.Image as Image
 import os
@@ -59,26 +58,29 @@ def prediction(img_path):
     label = classes[y_prob]
     return label
 
+
+# routes
 @app.route("/", methods=['GET', 'POST'])
-def home():
+def main():
+	return render_template("index.html")
 
-    return render_template('home.html')
+@app.route("/about")
+def about_page():
+	return "Please subscribe  Artificial Intelligence Hub..!!!"
 
-@app.route("/predict", methods = ['GET','POST'])
-def predict():
-    
-    if request.method == 'POST':
-        
-        file = request.files['file']
-        filename = file.filename
-        file_path = os.path.join(r'Static', filename)                       #slashes should be handeled properly
-        file.save(file_path)
-        print(file_path)
-        product = prediction(file_path)
-        print(product)
-        
-    return render_template('predict.html', product = product, user_image = file_path)   
+@app.route("/submit", methods = ['GET', 'POST'])
+def get_output():
+	if request.method == 'POST':
+		img = request.files['my_image']
+
+		img_path = "static/" + img.filename	
+		img.save(img_path)
+
+		p = prediction(img_path)
+
+	return render_template("index.html", prediction = p, img_path = img_path)
 
 
-if __name__ == "__main__":
-    app.run()                                            #run the application
+if __name__ =='__main__':
+	#app.debug = True
+	app.run(debug = True)
